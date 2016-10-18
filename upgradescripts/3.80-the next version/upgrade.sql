@@ -362,6 +362,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.CancelOrderTotals">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount">
+    <Value>Email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount.Hint">
+    <Value>The email account that will be used to send this campaign.</Value>
+  </LocaleResource>
 </Language>
 '
 
