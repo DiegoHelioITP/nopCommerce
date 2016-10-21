@@ -5,6 +5,7 @@ using System.Web.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Cms;
 using Nop.Core.Domain.Cms;
+using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -23,21 +24,26 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly WidgetSettings _widgetSettings;
 	    private readonly IPluginFinder _pluginFinder;
+        private readonly IWorkContext _workContext;
 
-	    #endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
         public WidgetController(IWidgetService widgetService,
-            IPermissionService permissionService, ISettingService settingService,
-            WidgetSettings widgetSettings, IPluginFinder pluginFinder)
+            IPermissionService permissionService,
+            ISettingService settingService,
+            WidgetSettings widgetSettings,
+            IPluginFinder pluginFinder,
+            IWorkContext workContext)
 		{
             this._widgetService = widgetService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._widgetSettings = widgetSettings;
             this._pluginFinder = pluginFinder;
-		}
+            this._workContext = workContext;
+        }
 
 		#endregion 
         
@@ -63,7 +69,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var widgetsModel = new List<WidgetModel>();
-            var widgets = _widgetService.LoadAllWidgets();
+            var widgets = _widgetService.LoadAllWidgets(_workContext.CurrentCustomer);
             foreach (var widget in widgets)
             {
                 var tmp1 = widget.ToModel();
@@ -141,7 +147,7 @@ namespace Nop.Admin.Controllers
             //model
             var model = new List<RenderWidgetModel>();
 
-            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
+            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer);
             foreach (var widget in widgets)
             {
                 var widgetModel = new RenderWidgetModel();
@@ -159,6 +165,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView(model);
         }
+
         #endregion
     }
 }

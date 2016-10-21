@@ -30,10 +30,11 @@ namespace Nop.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
 	    private readonly IWebHelper _webHelper;
 	    private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
         public PaymentController(IPaymentService paymentService,
             PaymentSettings paymentSettings,
@@ -42,7 +43,8 @@ namespace Nop.Admin.Controllers
             ICountryService countryService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IWorkContext workContext)
 		{
             this._paymentService = paymentService;
             this._paymentSettings = paymentSettings;
@@ -52,7 +54,8 @@ namespace Nop.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._localizationService = localizationService;
-		}
+            this._workContext = workContext;
+        }
 
 		#endregion 
 
@@ -73,7 +76,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var paymentMethodsModel = new List<PaymentMethodModel>();
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
+            var paymentMethods = _paymentService.LoadAllPaymentMethods(_workContext.CurrentCustomer);
             foreach (var paymentMethod in paymentMethods)
             {
                 var tmp1 = paymentMethod.ToModel();
@@ -153,7 +156,7 @@ namespace Nop.Admin.Controllers
 
             var model = new PaymentMethodRestrictionModel();
 
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
+            var paymentMethods = _paymentService.LoadAllPaymentMethods(_workContext.CurrentCustomer);
             var countries = _countryService.GetAllCountries(showHidden: true);
             foreach (var pm in paymentMethods)
             {
@@ -184,7 +187,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
+            var paymentMethods = _paymentService.LoadAllPaymentMethods(_workContext.CurrentCustomer);
             var countries = _countryService.GetAllCountries(showHidden: true);
 
             foreach (var pm in paymentMethods)

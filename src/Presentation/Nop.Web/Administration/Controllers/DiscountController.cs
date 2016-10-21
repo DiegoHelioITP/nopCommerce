@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public DiscountController(IDiscountService discountService, 
             ILocalizationService localizationService,
@@ -116,7 +116,7 @@ namespace Nop.Admin.Controllers
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
-            var discountRules = _discountService.LoadAllDiscountRequirementRules();
+            var discountRules = _discountService.LoadAllDiscountRequirementRules(_workContext.CurrentCustomer);
             foreach (var discountRule in discountRules)
                 model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = discountRule.PluginDescriptor.FriendlyName, Value = discountRule.PluginDescriptor.SystemName });
 
@@ -140,6 +140,8 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        #region Methods
 
         #region Discounts
 
@@ -833,6 +835,8 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
+
+        #endregion
 
         #endregion
     }

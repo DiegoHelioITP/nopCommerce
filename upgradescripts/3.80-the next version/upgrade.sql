@@ -362,6 +362,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.CancelOrderTotals">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.AclCustomerRoles.Hint">
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to use this plugin. If you don''t need this option just leave this field empty.</Value>
+  </LocaleResource>
 </Language>
 '
 

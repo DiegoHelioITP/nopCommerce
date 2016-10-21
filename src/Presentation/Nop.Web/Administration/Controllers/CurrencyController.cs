@@ -33,19 +33,24 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public CurrencyController(ICurrencyService currencyService, 
-            CurrencySettings currencySettings, ISettingService settingService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            CurrencySettings currencySettings, 
+            ISettingService settingService,
+            IDateTimeHelper dateTimeHelper, 
+            ILocalizationService localizationService,
             IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService, 
+            ILanguageService languageService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            IWorkContext workContext)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -58,6 +63,7 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._customerActivityService = customerActivityService;
+            this._workContext = workContext;
         }
         
         #endregion
@@ -69,10 +75,7 @@ namespace Nop.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(currency,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(currency, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
@@ -152,7 +155,7 @@ namespace Nop.Admin.Controllers
                 }
             }
             ViewBag.ExchangeRateProviders = new List<SelectListItem>();
-            foreach (var erp in _currencyService.LoadAllExchangeRateProviders())
+            foreach (var erp in _currencyService.LoadAllExchangeRateProviders(_workContext.CurrentCustomer))
             {
                 ViewBag.ExchangeRateProviders.Add(new SelectListItem
                 {
