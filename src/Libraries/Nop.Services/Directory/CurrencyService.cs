@@ -87,12 +87,14 @@ namespace Nop.Services.Directory
         /// Gets currency live rates
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Exchange rates</returns>
-        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode, Customer customer = null)
         {
-            var exchangeRateProvider = LoadActiveExchangeRateProvider();
+            var exchangeRateProvider = LoadActiveExchangeRateProvider(customer);
             if (exchangeRateProvider == null)
                 throw new Exception("Active exchange rate provider cannot be loaded");
+
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
         }
 
@@ -337,8 +339,9 @@ namespace Nop.Services.Directory
         public virtual IExchangeRateProvider LoadActiveExchangeRateProvider(Customer customer = null)
         {
             var exchangeRateProvider = LoadExchangeRateProviderBySystemName(_currencySettings.ActiveExchangeRateProviderSystemName);
-            if (exchangeRateProvider == null)
+            if (exchangeRateProvider == null || !_pluginFinder.AuthorizedForUser(exchangeRateProvider.PluginDescriptor, customer))
                 exchangeRateProvider = LoadAllExchangeRateProviders(customer).FirstOrDefault();
+
             return exchangeRateProvider;
         }
 

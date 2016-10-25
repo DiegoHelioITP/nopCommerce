@@ -147,7 +147,7 @@ namespace Nop.Admin.Controllers
                     if (primaryExchangeCurrency == null)
                         throw new NopException("Primary exchange rate currency is not set");
 
-                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
+                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode, _workContext.CurrentCustomer);
                 }
                 catch (Exception exc)
                 {
