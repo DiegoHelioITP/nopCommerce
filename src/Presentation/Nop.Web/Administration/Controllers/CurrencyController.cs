@@ -33,7 +33,6 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -49,8 +48,7 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            ICustomerActivityService customerActivityService,
-            IWorkContext workContext)
+            ICustomerActivityService customerActivityService)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -63,7 +61,6 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._customerActivityService = customerActivityService;
-            this._workContext = workContext;
         }
         
         #endregion
@@ -147,7 +144,7 @@ namespace Nop.Admin.Controllers
                     if (primaryExchangeCurrency == null)
                         throw new NopException("Primary exchange rate currency is not set");
 
-                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode, _workContext.CurrentCustomer);
+                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
                 }
                 catch (Exception exc)
                 {
@@ -155,7 +152,7 @@ namespace Nop.Admin.Controllers
                 }
             }
             ViewBag.ExchangeRateProviders = new List<SelectListItem>();
-            foreach (var erp in _currencyService.LoadAllExchangeRateProviders(_workContext.CurrentCustomer))
+            foreach (var erp in _currencyService.LoadAllExchangeRateProviders())
             {
                 ViewBag.ExchangeRateProviders.Add(new SelectListItem
                 {

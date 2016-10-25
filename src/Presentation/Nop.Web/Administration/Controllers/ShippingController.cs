@@ -40,7 +40,6 @@ namespace Nop.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -58,8 +57,7 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
-            ICustomerActivityService customerActivityService,
-            IWorkContext workContext)
+            ICustomerActivityService customerActivityService)
         {
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
@@ -74,7 +72,6 @@ namespace Nop.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
-            this._workContext = workContext;
         }
 
 		#endregion 
@@ -119,7 +116,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
-            var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods(_workContext.CurrentCustomer);
+            var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
             foreach (var shippingProvider in shippingProviders)
             {
                 var tmp1 = shippingProvider.ToModel();
@@ -211,7 +208,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var pickupPointProviderModel = new List<PickupPointProviderModel>();
-            var allProviders = _shippingService.LoadAllPickupPointProviders(_workContext.CurrentCustomer);
+            var allProviders = _shippingService.LoadAllPickupPointProviders();
             foreach (var provider in allProviders)
             {
                 var model = provider.ToModel();

@@ -50,7 +50,6 @@ namespace Nop.Admin.Controllers
         private readonly WidgetSettings _widgetSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
-        private readonly IWorkContext _workContext;
         
         #endregion
 
@@ -70,8 +69,7 @@ namespace Nop.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings, 
             WidgetSettings widgetSettings,
             ICustomerActivityService customerActivityService,
-            ICustomerService customerService,
-            IWorkContext workContext)
+            ICustomerService customerService)
         {
             this._pluginFinder = pluginFinder;
             this._officialFeedManager = officialFeedManager;
@@ -88,7 +86,6 @@ namespace Nop.Admin.Controllers
             this._widgetSettings = widgetSettings;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
-            this._workContext = workContext;
         }
 
 		#endregion 
@@ -288,7 +285,7 @@ namespace Nop.Admin.Controllers
 	            return AccessDeniedView();
 
 	        var loadMode = (LoadPluginsMode) model.SearchLoadModeId;
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, _workContext.CurrentCustomer, 0, model.SearchGroup).ToList();
+            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, group: model.SearchGroup).ToList();
 	        var gridModel = new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false, false))

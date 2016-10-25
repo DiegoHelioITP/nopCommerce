@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Tax;
-using Nop.Core;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
@@ -23,7 +22,6 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -33,15 +31,13 @@ namespace Nop.Admin.Controllers
             ITaxCategoryService taxCategoryService,
             TaxSettings taxSettings,
             ISettingService settingService,
-            IPermissionService permissionService,
-            IWorkContext workContext)
+            IPermissionService permissionService)
 		{
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
-            this._workContext = workContext;
 		}
 
 		#endregion 
@@ -62,7 +58,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            var taxProvidersModel = _taxService.LoadAllTaxProviders(_workContext.CurrentCustomer)
+            var taxProvidersModel = _taxService.LoadAllTaxProviders()
                 .Select(x => x.ToModel())
                 .ToList();
             foreach (var tpm in taxProvidersModel)

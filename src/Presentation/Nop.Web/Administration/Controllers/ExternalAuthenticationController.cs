@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.ExternalAuthentication;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
@@ -24,7 +23,6 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -34,15 +32,13 @@ namespace Nop.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings,
             ISettingService settingService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder,
-            IWorkContext workContext)
+            IPluginFinder pluginFinder)
 		{
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
-            this._workContext = workContext; 
 		}
 
 		#endregion 
@@ -64,7 +60,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var methodsModel = new List<AuthenticationMethodModel>();
-            var methods = _openAuthenticationService.LoadAllExternalAuthenticationMethods(_workContext.CurrentCustomer);
+            var methods = _openAuthenticationService.LoadAllExternalAuthenticationMethods();
             foreach (var method in methods)
             {
                 var tmp1 = method.ToModel();

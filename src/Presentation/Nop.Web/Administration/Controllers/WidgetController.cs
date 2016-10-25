@@ -5,7 +5,6 @@ using System.Web.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Cms;
 using Nop.Core.Domain.Cms;
-using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -24,7 +23,6 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly WidgetSettings _widgetSettings;
 	    private readonly IPluginFinder _pluginFinder;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -34,15 +32,13 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService,
             WidgetSettings widgetSettings,
-            IPluginFinder pluginFinder,
-            IWorkContext workContext)
+            IPluginFinder pluginFinder)
 		{
             this._widgetService = widgetService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._widgetSettings = widgetSettings;
             this._pluginFinder = pluginFinder;
-            this._workContext = workContext;
         }
 
 		#endregion 
@@ -69,7 +65,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var widgetsModel = new List<WidgetModel>();
-            var widgets = _widgetService.LoadAllWidgets(_workContext.CurrentCustomer);
+            var widgets = _widgetService.LoadAllWidgets();
             foreach (var widget in widgets)
             {
                 var tmp1 = widget.ToModel();
@@ -147,7 +143,7 @@ namespace Nop.Admin.Controllers
             //model
             var model = new List<RenderWidgetModel>();
 
-            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer);
+            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
                 var widgetModel = new RenderWidgetModel();
